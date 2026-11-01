@@ -5,13 +5,17 @@
 //
 //   node scripts/sync-nordic-rose.mjs                    uses $NORDIC_ROSE_DIR, else ../nordic-rose, else clones with `gh`
 //   node scripts/sync-nordic-rose.mjs --from ../nordic-rose
-//   node scripts/sync-nordic-rose.mjs --check            exit 1 if the project differs from Nordic Rose (CI / pre-commit)
+//   node scripts/sync-nordic-rose.mjs --check            exit 1 if the project differs from Nordic Rose (needs the source)
+//   node scripts/sync-nordic-rose.mjs --verify           exit 1 if a vendored file was edited since the last sync. Needs no
+//                                                        access to the private repo: it checks the hashes recorded in
+//                                                        .nordic-rose-sync.json (use this in CI)
 //   node scripts/sync-nordic-rose.mjs --from <repo> --to templates/astro-starter   (used by nordic-rose itself)
 //
 // Synced files are Nordic Rose-owned: edit them in nordic-rose, then sync. Project-owned files are never touched
 // (Layout, Header, Footer, src/styles/global.css, src/data/site.ts, package.json, ...).
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 
@@ -39,6 +43,26 @@ const MAP = [
   ["scripts/sync-nordic-rose.mjs", "scripts/sync-nordic-rose.mjs"],
 ];
 
+const STAMP = join(to, ".nordic-rose-sync.json");
+const sha = (file) => createHash("sha256").update(readFileSync(file)).digest("hex");
+const listFiles = (p) =>
+  statSync(p).isDirectory() ? readdirSync(p, { recursive: true }).filter((f) => statSync(join(p, f)).isFile()).sort() : [""];
+
+if (args.includes("--verify")) {
+  if (!existsSync(STAMP)) throw new Error("no .nordic-rose-sync.json: run a sync first");
+  const { commit, files: recorded } = JSON.parse(readFileSync(STAMP, "utf8"));
+  if (!recorded) throw new Error(".nordic-rose-sync.json has no file hashes: re-run the sync with a current script");
+  const present = MAP.flatMap(([, dest]) => (existsSync(join(to, dest)) ? listFiles(join(to, dest)).map((f) => join(dest, f)) : []));
+  let bad = 0;
+  for (const f of Object.keys(recorded)) {
+    if (!existsSync(join(to, f))) { bad++; console.log(`missing   ${f}`); }
+    else if (sha(join(to, f)) !== recorded[f]) { bad++; console.log(`edited    ${f}`); }
+  }
+  for (const f of present.filter((f) => !(f in recorded))) { bad++; console.log(`extra     ${f}`); }
+  console.log(bad ? `${bad} vendored file(s) differ from Nordic Rose ${commit}. Change them in nordic-rose, then sync.` : `Vendored files match Nordic Rose ${commit}.`);
+  process.exit(bad ? 1 : 0);
+}
+
 let from = opt("from") ?? process.env.NORDIC_ROSE_DIR;
 let cleanup;
 if (!from) {
@@ -55,8 +79,7 @@ if (!from) {
 from = resolve(from);
 if (!existsSync(join(from, "tokens/tokens.ts"))) throw new Error(`${from} does not look like nordic-rose`);
 
-const files = (p) =>
-  statSync(p).isDirectory() ? readdirSync(p, { recursive: true }).filter((f) => statSync(join(p, f)).isFile()).sort() : [""];
+const files = listFiles;
 
 let changed = 0;
 for (const [src, dest] of MAP) {
@@ -88,7 +111,10 @@ if (!check && !args.includes("--no-stamp")) {
   try {
     commit = execFileSync("git", ["-C", from, "rev-parse", "--short", "HEAD"], { encoding: "utf8" }).trim();
   } catch {}
-  writeFileSync(join(to, ".nordic-rose-sync.json"), JSON.stringify({ source: REPO, commit }, null, 2) + "\n");
+  const hashes = Object.fromEntries(
+    MAP.flatMap(([, dest]) => listFiles(join(to, dest)).map((f) => [join(dest, f), sha(join(to, dest, f))])),
+  );
+  writeFileSync(STAMP, JSON.stringify({ source: REPO, commit, files: hashes }, null, 2) + "\n");
 }
 if (cleanup) rmSync(cleanup, { recursive: true, force: true });
 console.log(changed ? `${changed} file(s) ${check ? "out of sync" : "synced"}.` : "Already in sync with Nordic Rose.");

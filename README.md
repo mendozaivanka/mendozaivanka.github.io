@@ -37,7 +37,7 @@ npm run preview
 - **CV:** edit `src/data/cv.ts`, then `npm run resume:pdf` and commit `public/Ivanka-Mendoza-CV.pdf`. The phone number
   stays off the public site (`cv.profile.phone` is `null`).
 - **Design system:** change it in `../nordic-rose`, then `npm run design:sync` here and commit. CI runs
-  `npm run design:check` and fails if a vendored file was edited in this repo.
+  `npm run design:verify` (hashes recorded at sync time) and fails if a vendored file was edited in this repo.
 - **A coffee site goes live:** set its `href` and `status` in `coffee` in `src/data/site.ts`.
 
 ## Deploying

@@ -24,8 +24,8 @@ jobs:
             scripts/check-attribution.sh "${{ github.event.before }}..${{ github.sha }}" || scripts/check-attribution.sh HEAD~1..HEAD
           fi
       - run: npm ci
-      - name: Vendored Nordic Rose files are unchanged
-        run: npm run design:check
+      - name: Vendored Nordic Rose files are unchanged (hash check; the design repo is private)
+        run: npm run design:verify
       - name: Type-check, content validation, WCAG contrast and build
         run: npm run build
       - name: Size guard (GitHub Pages limit is 1 GB)

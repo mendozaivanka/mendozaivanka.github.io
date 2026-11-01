@@ -19,7 +19,8 @@
     "resume:pdf": "node scripts/build-resume-pdf.ts",
     "design:sync": "node scripts/sync-nordic-rose.mjs",
     "design:check": "node scripts/sync-nordic-rose.mjs --check",
-    "hooks": "git config core.hooksPath .githooks"
+    "hooks": "git config core.hooksPath .githooks",
+    "design:verify": "node scripts/sync-nordic-rose.mjs --verify"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.0",
