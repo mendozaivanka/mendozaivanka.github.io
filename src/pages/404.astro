@@ -1,0 +1,20 @@
+---
+import { cn } from "@/lib/utils";
+import Layout from "@/layouts/Layout.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { site } from "@/data/site";
+---
+
+<Layout title={`Page not found — ${site.name}`} description="That page doesn't exist.">
+  <section class="reveal grid max-w-[640px] gap-3 pt-8 pb-6 sm:pt-14">
+    <span class="label-mono">404 · off the map</span>
+    <h1 class="font-heading text-[clamp(2.375rem,5.5vw,3.25rem)] leading-[1.05] font-medium tracking-tight">
+      No star <em class="text-primary-strong italic">here</em>
+    </h1>
+    <p class="text-muted-foreground">That page doesn't exist, or it moved. The morning star points back home.</p>
+    <div class="mt-2 flex flex-wrap gap-2">
+      <a href="/" class={cn(buttonVariants({ size: "lg" }))}>Back home</a>
+      <a href="/projects/" class={cn(buttonVariants({ size: "lg", variant: "outline" }))}>See projects</a>
+    </div>
+  </section>
+</Layout>

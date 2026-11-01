@@ -1,0 +1,34 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions: { contents: read }
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version-file: .node-version, cache: npm }
+      - name: No AI attribution in commits
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            scripts/check-attribution.sh "origin/${{ github.base_ref }}..HEAD"
+          else
+            scripts/check-attribution.sh "${{ github.event.before }}..${{ github.sha }}" || scripts/check-attribution.sh HEAD~1..HEAD
+          fi
+      - run: npm ci
+      - name: Vendored Nordic Rose files are unchanged
+        run: npm run design:check
+      - name: Type-check, content validation, WCAG contrast and build
+        run: npm run build
+      - name: Size guard (GitHub Pages limit is 1 GB)
+        run: |
+          size=$(du -sm dist | cut -f1); echo "dist is ${size} MB"
+          [ "$size" -lt 900 ]
