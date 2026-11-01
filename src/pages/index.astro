@@ -4,6 +4,7 @@ import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
 import Layout from "@/layouts/Layout.astro";
 import BeltPreview from "@/components/BeltPreview.astro";
 import CopyEmailButton from "@/components/CopyEmailButton";
+import SocialIcon from "@/components/SocialIcon.astro";
 import { buttonVariants } from "@/components/ui/button";
 import { formatDate } from "@/data/cv";
 import { coffee, site, socials } from "@/data/site";
@@ -188,9 +189,20 @@ const tile = "flex min-w-0 flex-col gap-3 rounded-[20px] border border-border bg
       <h2 id="contact-heading" class="text-[22px] font-bold tracking-tight">Say hello</h2>
       <p class="mt-1 text-[15px] select-all">{site.email}</p>
     </div>
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 font-semibold">
-      {socials.map((s) => <a href={s.href} class="text-primary-foreground underline-offset-4 hover:underline">{s.name}</a>)}
-      {cv.profile.pdf && <a href={cv.profile.pdf} class="text-primary-foreground underline-offset-4 hover:underline">CV (PDF)</a>}
+    <div class="flex flex-wrap items-center gap-x-2 gap-y-2 font-semibold">
+      {
+        socials.map((s) => (
+          <a
+            href={s.href}
+            aria-label={s.name}
+            title={s.name}
+            class="inline-flex size-11 items-center justify-center rounded-full text-primary-foreground transition-colors hover:bg-primary-foreground/10 focus-visible:ring-3 focus-visible:ring-primary-foreground/40 focus-visible:outline-none"
+          >
+            <SocialIcon name={s.name} />
+          </a>
+        ))
+      }
+      {cv.profile.pdf && <a href={cv.profile.pdf} class="px-1 text-primary-foreground underline-offset-4 hover:underline">CV</a>}
       <CopyEmailButton client:idle email={site.email} />
     </div>
   </section>
