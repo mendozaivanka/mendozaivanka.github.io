@@ -55,7 +55,7 @@ const tile = "flex min-w-0 flex-col gap-3 rounded-[20px] border border-border bg
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-2.5">
-        <a href="/projects/" class={buttonVariants({ size: "lg" })}>See the case studies</a>
+        <a href="/about/" class={buttonVariants({ size: "lg" })}>See my work</a>
         {
           cv.profile.pdf && (
             <a href={cv.profile.pdf} class={cn(buttonVariants({ size: "lg", variant: "ghost" }))}>
@@ -69,7 +69,7 @@ const tile = "flex min-w-0 flex-col gap-3 rounded-[20px] border border-border bg
     <div class={cn(tile, "reveal gap-1 sm:col-span-2 lg:row-span-2")}>
       <div class="flex items-center justify-between pb-2">
         <h2 class="label-mono">Case studies</h2>
-        <a href="/projects/" class="text-sm font-semibold text-primary-strong no-underline hover:underline">All projects</a>
+        <a href="/about/" class="text-sm font-semibold text-primary-strong no-underline hover:underline">All work</a>
       </div>
       {
         caseStudies.map((c) => (

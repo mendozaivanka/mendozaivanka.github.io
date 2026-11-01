@@ -23,21 +23,8 @@ export const socials: Social[] = [
 ];
 
 /** Lines that rotate in the "Currently prompting" card. */
-export const prompts = [
-  "You are a calm, precise assistant…",
-  "Extract every invoice line item as JSON.",
-  "Think step by step, then answer in one line.",
-  "If you're unsure, say so. Never guess.",
-  "Classify this ticket: billing, bug, or feature?",
-];
-
-/** Eval pass rate (%) for prompt versions v1…v9, drawn as the hero sparkline. Sample data. */
-export const passRates = [71, 74, 82, 80, 85, 88, 90, 93, 95];
-
 export const nav = [
-  { label: "Projects", href: "/projects/" },
-  { label: "Coffee", href: "/#coffee" },
-  { label: "CV", href: "/cv/" },
+  { label: "About", href: "/about/" },
   { label: "Nordic Rose", href: "/nordic-rose/" },
   { label: "Contact", href: "/#contact" },
 ];

@@ -1,12 +1,10 @@
 ---
-import CommandMenu from "@/components/CommandMenu";
 import ThemeMenu from "@/components/ThemeMenu";
 import RoseMark from "@/components/RoseMark";
-import { nav, site, socials } from "@/data/site";
+import { nav, site } from "@/data/site";
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => !href.includes("#") && path === href;
-const commandLinks = socials.map(({ name, href }) => ({ name, href }));
 ---
 
 <header
@@ -40,7 +38,6 @@ const commandLinks = socials.map(({ name, href }) => ({ name, href }));
       }
     </nav>
     <div class="ml-auto flex items-center gap-1.5">
-      <CommandMenu client:load email={site.email} pages={nav} links={commandLinks} />
       <ThemeMenu client:load />
     </div>
   </div>

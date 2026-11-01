@@ -1,6 +1,6 @@
 ---
 /**
- * The résumé as a print-ready page, built from the same CV data as /cv/. `npm run resume:pdf` prints this page to
+ * The résumé as a print-ready page, built from the same CV data as /about/. `npm run resume:pdf` prints this page to
  * public/<name>.pdf, so the downloadable PDF never drifts from the site. Always light, A4, no site chrome.
  */
 import "@/styles/global.css";
@@ -28,7 +28,7 @@ const contact = [
     <title>{p.fullName} — Résumé</title>
     <meta name="description" content={`Résumé of ${p.fullName}, ${p.title}.`} />
     <meta name="robots" content="noindex" />
-    <link rel="canonical" href={new URL("/cv/", siteUrl)} />
+    <link rel="canonical" href={new URL("/about/", siteUrl)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <style>
       @page { size: A4; margin: 14mm 15mm; }
@@ -41,8 +41,8 @@ const contact = [
   <body class="bg-background text-[10pt] leading-[1.45] text-foreground print:bg-white">
     <main class="sheet px-4">
       <p class="screen-only mb-6 text-sm text-muted-foreground">
-        Printable résumé. <a class="text-primary-strong underline" href={p.pdf ?? "/cv/"}>Download the PDF</a> ·
-        <a class="text-primary-strong underline" href="/cv/">Back to the CV</a>
+        Printable résumé. <a class="text-primary-strong underline" href={p.pdf ?? "/about/"}>Download the PDF</a> ·
+        <a class="text-primary-strong underline" href="/about/">Back to About</a>
       </p>
 
       <header class="grid gap-1.5 border-b-2 border-primary pb-3">

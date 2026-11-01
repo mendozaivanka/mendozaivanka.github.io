@@ -1,5 +1,5 @@
 /**
- * Curriculum vitae. One source of truth, rendered three ways on /cv/
+ * Curriculum vitae. One source of truth, rendered three ways on /about/
  * (timeline, JSON, system prompt) and summarised on the home page.
  * Dates are ISO "YYYY-MM"; `end: null` means current.
  */
@@ -43,7 +43,7 @@ export const cv: CV = {
     title: "AI & Automation Engineer",
     location: "Metro Manila, Philippines",
     email: "mendozaivanka@gmail.com",
-    // Deliberately not published on the public site. Set it to show it on /cv/.
+    // Deliberately not published on the public site. Set it to show it on /about/.
     phone: null as string | null,
     summary:
       "Senior AI and Prompt Engineer with expertise in designing, developing, and optimizing enterprise AI solutions, multi-agent workflows, and RAG architectures. Skilled in utilizing platforms such as Amazon SageMaker, Amazon Bedrock, OpenAI, and Anthropic to support the quality assurance of enterprise AI tools. Proficient in Python and LlamaIndex, with a strong track record of leading prompt optimization strategies, implementing responsible AI frameworks, and delivering actionable, data-driven insights to executive stakeholders. Proven ability to translate complex requirements into scalable, maintainable solutions that improve efficiency and reduce manual work.",

@@ -47,6 +47,8 @@ export default defineConfig({
   // Tanim became its Beans and Shipped-in chapters. The design system page was /tala/.
   redirects: {
     "/tala/": "/nordic-rose/",
+    "/cv/": "/about/",
+    "/projects/": "/about/",
     "/tanim/": "/timpla/beans/",
     "/tanim/country/": "/timpla/country/",
     "/tanim/shipped/": "/timpla/shipped/",

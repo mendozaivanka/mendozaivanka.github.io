@@ -32,8 +32,8 @@ const sections = [
 <Layout title={`${project.title} · case study — ${site.name}`} description={cs.tagline}>
   <article class="grid max-w-[880px] gap-12 pt-8 sm:pt-14">
     <header class="reveal grid gap-4">
-      <a href="/projects/" class="inline-flex w-fit items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeftIcon className="size-3.5" aria-hidden="true" /> All projects
+      <a href="/about/" class="inline-flex w-fit items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <ArrowLeftIcon className="size-3.5" aria-hidden="true" /> All work
       </a>
       <span class="label-mono">Case study</span>
       <h1 class="font-heading text-[clamp(2.25rem,6vw,3.25rem)] leading-[1.05] font-medium tracking-tight text-balance">
@@ -139,7 +139,7 @@ const sections = [
     </section>
 
     <footer class="reveal flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6">
-      <a href="/projects/" class={cn(buttonVariants({ variant: "outline" }))}><ArrowLeftIcon /> All projects</a>
+      <a href="/about/" class={cn(buttonVariants({ variant: "outline" }))}><ArrowLeftIcon /> All work</a>
       {
         next.caseStudy!.slug !== cs.slug && (
           <a href={`/projects/${next.caseStudy!.slug}/`} class={cn(buttonVariants({ variant: "secondary" }))}>

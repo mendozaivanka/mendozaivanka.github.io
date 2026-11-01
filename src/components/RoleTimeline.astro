@@ -1,0 +1,274 @@
+---
+// The About page's Timeline view: each role from the CV, newest first, on one spine. A role shows its CV bullets
+// (the rest behind "more"), then the work built in it, case studies leading with their headline metric. The coffee
+// sites sit beside the current role, education closes the spine, and skills, certifications and languages follow.
+// On phones it becomes one column.
+import { cn } from "@/lib/utils";
+import { coffee } from "@/data/site";
+import { formatDate, type Role } from "@/data/cv";
+import type { Project } from "@/data/projects";
+import { getCv, getProjects } from "@/lib/data";
+
+const [projects, cv] = await Promise.all([getProjects(), getCv()]);
+const work = projects.filter((p) => p.kind === "work");
+
+// A work project belongs to the role at its employer; "(internship)" projects go to the intern role.
+const company = (s: string) => s.replace(/,?\s*Inc\.?$/i, "").replace(/\s*\(internship\)$/i, "").trim().toLowerCase();
+const isIntern = (r: Role) => /intern/i.test(r.title);
+const roleOf = (p: Project) =>
+  cv.experience.find((r) => p.org && company(r.company).startsWith(company(p.org)) && isIntern(r) === /internship/i.test(p.org));
+
+const year = (d: string | null) => (d ? d.slice(0, 4) : null);
+const span = (start: string, end: string | null) => {
+  const a = year(start), b = year(end);
+  return b === null ? `${a} –` : a === b ? a : `${a}–${b.slice(2)}`;
+};
+const companyName = (s: string) => s.replace(/,?\s*Inc\.?$/, "");
+
+// Case studies first, then the rest, newest first
+const rank = (p: Project) => (p.caseStudy ? 0 : 1);
+const rows = cv.experience.map((r) => ({
+  role: r,
+  items: work.filter((p) => roleOf(p) === r).sort((a, b) => rank(a) - rank(b) || b.year - a.year),
+}));
+// Projects whose org matches no role still get listed, so nothing silently disappears
+const placed = new Set(rows.flatMap((r) => r.items));
+const unplaced = work.filter((p) => !placed.has(p));
+
+const SHOWN_BULLETS = 3;
+const headline = (p: Project) => p.caseStudy?.evals.metrics[0];
+const statusTint = { Live: "bg-moss", Building: "bg-sand", Planned: "bg-secondary" };
+const dot = { Live: "bg-[#3fae7a]", Building: "bg-[#b9822e]", Planned: "bg-muted-foreground" };
+const ongoing = (p: Project) => p.period?.endsWith("–") ?? false;
+
+/** Preview mini-markup: **rose**, ==fjord==. */
+const marks = (line: string) =>
+  line.split(/(\*\*[^*]+\*\*|==[^=]+==)/g).map((t) =>
+    t.startsWith("**") ? { t: t.slice(2, -2), c: "text-primary-strong" } : t.startsWith("==") ? { t: t.slice(2, -2), c: "font-medium text-fjord-ink" } : { t, c: "" },
+  );
+---
+
+<div>
+  <div class="hidden gap-x-6 pb-4 lg:grid lg:grid-cols-[96px_minmax(0,1fr)_320px]" aria-hidden="true">
+    <span></span>
+    <span class="flex items-center gap-2.5 text-sm text-muted-foreground"><span class="kind-chip bg-fjord text-fjord-ink">At work</span>Internal systems; numbers from my CV</span>
+    <span class="flex items-center gap-2.5 text-sm text-muted-foreground"><span class="kind-chip bg-rosas-1 text-primary-strong">Side projects</span>Public</span>
+  </div>
+
+  <ol class="spine m-0 grid list-none gap-12 p-0 sm:gap-16 lg:gap-0">
+    {
+      rows.map((row, i) => (
+        <li class="reveal relative grid gap-x-6 gap-y-4 lg:grid-cols-[96px_minmax(0,1fr)_320px] lg:border-t lg:border-border lg:py-10">
+          <div class="flex items-center gap-3 lg:block lg:pt-1">
+            <span class={cn("node", row.role.end === null && "node-now")} aria-hidden="true"></span>
+            <span class="text-2xl font-bold tracking-tight lg:text-xl">{span(row.role.start, row.role.end)}</span>
+          </div>
+
+          <div class="grid min-w-0 content-start gap-3">
+            <div class="grid gap-0.5">
+              <h2 class="text-xl leading-tight font-bold tracking-[-0.02em]">{row.role.title}</h2>
+              <span class="label-mono">
+                {companyName(row.role.company)} · {formatDate(row.role.start)} – {row.role.end ? formatDate(row.role.end) : "now"} · {row.role.location}
+              </span>
+            </div>
+            <ul class="grid list-disc gap-1.5 pl-5 text-[15px] leading-relaxed marker:text-rosas-4">
+              {row.role.bullets.slice(0, SHOWN_BULLETS).map((b) => <li>{b}</li>)}
+            </ul>
+            {row.role.bullets.length > SHOWN_BULLETS && (
+              <details class="group -mt-1">
+                <summary class="inline-flex min-h-11 cursor-pointer list-none items-center text-sm font-semibold text-primary-strong [&::-webkit-details-marker]:hidden">
+                  <span class="group-open:hidden">+ {row.role.bullets.length - SHOWN_BULLETS} more from the CV</span>
+                  <span class="hidden group-open:inline">Show fewer</span>
+                </summary>
+                <ul class="grid list-disc gap-1.5 pl-5 text-[15px] leading-relaxed marker:text-rosas-4">
+                  {row.role.bullets.slice(SHOWN_BULLETS).map((b) => <li>{b}</li>)}
+                </ul>
+              </details>
+            )}
+
+            {row.items.map((p) => {
+              const m = headline(p);
+              return (
+                <article class="grid gap-4 rounded-[20px] border border-border bg-card p-5 sm:grid-cols-[minmax(0,1fr)_200px] sm:p-6">
+                  <div class="grid content-start gap-1.5">
+                    <h3 class="text-lg leading-snug font-bold tracking-[-0.01em]">{p.title}</h3>
+                    <p class="text-[15px] leading-relaxed text-muted-foreground">{p.summary ?? p.description}</p>
+                  </div>
+                  <div class="grid content-start gap-0.5 max-sm:order-first sm:text-right">
+                    {m ? (
+                      <>
+                        <span class="text-[clamp(2rem,4vw,2.5rem)] leading-none font-bold tracking-[-0.035em] text-primary-strong">{m.value}</span>
+                        <span class="text-sm font-medium">{m.label}</span>
+                        <span class="font-mono text-[11px] leading-snug text-muted-foreground">{m.note}</span>
+                      </>
+                    ) : ongoing(p) ? (
+                      <span class={cn("inline-flex w-fit items-center gap-1.5 justify-self-start rounded-full px-2.5 py-1 text-xs font-semibold sm:justify-self-end", statusTint.Building)}>
+                        <span class={cn("size-1.5 rounded-full", dot.Building)} />Ongoing
+                      </span>
+                    ) : (
+                      <span class="label-mono">{p.period ?? p.year} · internal</span>
+                    )}
+                  </div>
+                  <div class="flex flex-wrap items-center gap-1.5 sm:col-span-2">
+                    {p.tags.map((t) => <span class="rounded-full border border-border px-2.5 py-0.5 text-[13px]">{t}</span>)}
+                    {p.caseStudy && (
+                      <a href={`/projects/${p.caseStudy.slug}/`} class="ml-auto inline-flex min-h-11 items-center text-sm font-semibold text-primary-strong no-underline hover:underline">
+                        Case study →
+                      </a>
+                    )}
+                  </div>
+                  {!m && ongoing(p) && p.preview.length > 0 && (
+                    <figure class="m-0 grid gap-1.5 sm:col-span-2">
+                      <pre class="m-0 overflow-x-auto rounded-xl bg-muted px-4 py-3 font-mono text-[13px] leading-relaxed">{p.preview.map((line) => <span class="block">{marks(line).map((s) => <span class={s.c}>{s.t}</span>)}</span>)}</pre>
+                      <figcaption class="text-[13px] text-muted-foreground">Illustrative run. Results will be added once they can be shared.</figcaption>
+                    </figure>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+
+          {i === 0 ? (
+            <aside class="grid content-start gap-3 max-lg:pt-4" aria-labelledby="side-h">
+              <div class="grid gap-0.5 pb-1">
+                <span class="kind-chip w-fit bg-rosas-1 text-primary-strong lg:hidden">Side projects</span>
+                <h2 id="side-h" class="text-xl leading-tight font-bold tracking-[-0.02em]">Coffee, counted.</h2>
+                <span class="label-mono">Open-data sites · {coffee.length} sites</span>
+              </div>
+              {coffee.map((c) => (
+                <article class="grid gap-2 rounded-[16px] border border-border bg-card p-4">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-base font-bold">{c.name}</h3>
+                    <span class={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold", statusTint[c.status])}>
+                      <span class={cn("size-1.5 rounded-full", dot[c.status])} />{c.status}
+                    </span>
+                  </div>
+                  <p class="text-sm leading-relaxed text-muted-foreground">{c.blurb}.</p>
+                  {c.results && <div class="flex flex-wrap gap-1.5">{c.results.map((r) => <span class="rounded-full bg-sand px-2.5 py-0.5 text-[13px]">{r}</span>)}</div>}
+                  {c.href && (
+                    <a href={c.href} class="inline-flex min-h-11 items-center text-sm font-semibold text-primary-strong no-underline hover:underline">
+                      Open {c.name} ↗
+                    </a>
+                  )}
+                </article>
+              ))}
+            </aside>
+          ) : (
+            <span class="hidden lg:block" aria-hidden="true"></span>
+          )}
+        </li>
+      ))
+    }
+
+    {
+      cv.education.map((e) => (
+        <li class="reveal relative grid gap-x-6 gap-y-2 lg:grid-cols-[96px_minmax(0,1fr)_320px] lg:border-t lg:border-border lg:py-10">
+          <div class="flex items-center gap-3 lg:block lg:pt-1">
+            <span class="node" aria-hidden="true"></span>
+            <span class="text-2xl font-bold tracking-tight lg:text-xl">{e.start}–{e.end.slice(2)}</span>
+          </div>
+          <div class="grid content-start gap-2">
+            <div class="grid gap-0.5">
+              <h2 class="text-xl leading-tight font-bold tracking-[-0.02em]">{e.degree}</h2>
+              <span class="label-mono">{e.school} · {e.start}–{e.end} · {e.location}</span>
+            </div>
+            <span class="w-fit rounded-full bg-fjord px-3 py-1 text-sm font-medium text-fjord-ink">{e.honours}</span>
+          </div>
+          <span class="hidden lg:block" aria-hidden="true"></span>
+        </li>
+      ))
+    }
+  </ol>
+
+  {
+    unplaced.length > 0 && (
+      <section class="pt-12" aria-label="Other work">
+        <h2 class="text-xl font-bold">Other work</h2>
+        <ul class="mt-3 grid list-none gap-2 p-0">{unplaced.map((p) => <li>{p.title}</li>)}</ul>
+      </section>
+    )
+  }
+
+  <section class="reveal mt-12 grid gap-8 border-t border-border pt-10 sm:mt-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,0.8fr)]" aria-label="Skills, certifications and languages">
+    <div class="grid content-start gap-4">
+      <h2 class="label-mono">Skills</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {
+          cv.skills.map((s) => (
+            <div class="grid content-start gap-1.5">
+              <span class="text-sm text-muted-foreground">{s.group}</span>
+              <div class="flex flex-wrap gap-1.5">{s.items.map((it) => <span class="rounded-full bg-secondary px-2.5 py-0.5 text-[13px]">{it}</span>)}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div class="grid content-start gap-3">
+      <h2 class="label-mono">Certifications</h2>
+      <ul class="grid list-none gap-2 p-0 text-sm">
+        {
+          cv.certifications.map((c) => (
+            <li class="grid border-t border-border pt-2 first:border-t-0 first:pt-0">
+              <span class="font-semibold">{c.name}</span>
+              <span class="text-xs text-muted-foreground">{c.issuer}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="grid content-start gap-3">
+      <h2 class="label-mono">Languages</h2>
+      <ul class="grid list-none gap-1.5 p-0 text-sm">
+        {cv.languages.map((l) => <li class="flex justify-between gap-3"><span class="font-medium">{l.name}</span><span class="text-muted-foreground">{l.level}</span></li>)}
+      </ul>
+    </div>
+  </section>
+</div>
+
+<style>
+  .kind-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  /* The spine: one line through every role and education, a dot per stop, a filled rose dot for now */
+  .spine {
+    position: relative;
+  }
+  @media (width >= 64rem) {
+    .spine::before {
+      content: "";
+      position: absolute;
+      top: 2.9rem;
+      bottom: 3rem;
+      left: 5px;
+      width: 1px;
+      background: var(--border);
+    }
+  }
+  .node {
+    position: relative;
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    border: 2px solid var(--rosas-4);
+    background: var(--background);
+  }
+  .node-now {
+    background: var(--rosas-4);
+  }
+  @media (width >= 64rem) {
+    .node {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+  }
+</style>
