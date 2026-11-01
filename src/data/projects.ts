@@ -359,26 +359,6 @@ export const projects: Project[] = [
     links: [],
   },
   {
-    title: "Prompt Garden",
-    year: 2026,
-    period: "2026–",
-    kind: "personal",
-    categories: ["prompting", "evals"],
-    description:
-      "My own tool: a versioned prompt library with side-by-side evals, so you can see whether a prompt change actually made things better before it ships. Prompts are treated like code, with a pass rate per version. The card at the top of the home page is its dashboard.",
-    summary: "A versioned prompt library with side-by-side evals, so you can see whether a change actually helped. My own tool.",
-    tags: ["Prompt eng.", "Evals", "TypeScript", "Claude API"],
-    tint: "heather",
-    preview: [
-      "**summarise.prompt**  v3 → v4",
-      "  accuracy    82% → ==91%==",
-      "  avg tokens  412 → ==288==",
-      "  regressions ==0==",
-    ],
-    // Add a GitHub or live link here when it's public
-    links: [],
-  },
-  {
     title: "Timpla",
     year: 2026,
     period: "2026–",
