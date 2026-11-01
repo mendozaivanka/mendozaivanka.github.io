@@ -54,12 +54,14 @@ export type CoffeeSite = {
   /** Label for the preview box until a real screenshot exists. */
   preview: string;
   tint: "rosas" | "sand" | "fjord" | "heather";
+  /** Headline figures from the site's own data, shown on the projects page. */
+  results?: string[];
 };
 
 /** The coffee family: open-data side projects, each its own repo on GitHub Pages. */
 export const coffee: CoffeeSite[] = [
-  { name: "Sinturon", blurb: "Where the world's coffee species have been recorded, and who grows it", status: "Live", href: "/sinturon/", preview: "Bean belt map", tint: "sand" },
-  { name: "Timpla", blurb: "Metro Manila's independent cafés, and Philippine coffee by province", status: "Live", href: TIMPLA_URL, preview: "Café map", tint: "rosas" },
+  { name: "Sinturon", blurb: "Where the world's coffee species have been recorded, and who grows it", status: "Live", href: "/sinturon/", preview: "Bean belt map", tint: "sand", results: ["12,514 records", "93% in the tropics"] },
+  { name: "Timpla", blurb: "Metro Manila's independent cafés, and Philippine coffee by province", status: "Live", href: TIMPLA_URL, preview: "Café map", tint: "rosas", results: ["82 provinces", "329 cafés"] },
   { name: "Sangkap", blurb: "What's in a cup: build one, see its molecules and how long the caffeine lasts", status: "Building", href: "", preview: "Caffeine curve", tint: "heather" },
   { name: "Pigâ", blurb: "Espresso, pour-over and press, explained through their physics", status: "Planned", href: "", preview: "Pressure vs flow", tint: "fjord" },
 ];
