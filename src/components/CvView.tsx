@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from "react";
-import { BracesIcon, CopyIcon, PrinterIcon, RouteIcon, SparklesIcon } from "lucide-react";
+import { BracesIcon, CopyIcon, RouteIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cvAsPrompt, type CV } from "@/data/cv";
@@ -51,17 +51,6 @@ export default function CvView({ cv, children }: { cv: CV; children: ReactNode }
             <SparklesIcon /> Prompt
           </TabsTrigger>
         </TabsList>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" className="no-js:hidden" onClick={() => copyText(json, "Copied the CV as JSON")}>
-            <CopyIcon /> Copy as JSON
-          </Button>
-          <Button variant="outline" size="sm" className="no-js:hidden" onClick={() => copyText(prompt, "Copied the CV as a prompt")}>
-            <CopyIcon /> Copy as prompt
-          </Button>
-          <Button variant="outline" size="sm" className="no-js:hidden" onClick={() => window.print()}>
-            <PrinterIcon /> Print
-          </Button>
-        </div>
       </div>
 
       <TabsContent value="timeline" forceMount className="data-[state=inactive]:hidden">

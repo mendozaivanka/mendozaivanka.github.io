@@ -49,23 +49,18 @@ const marks = (line: string) =>
 ---
 
 <div>
-  <div class="hidden gap-x-7 pb-4 lg:grid lg:grid-cols-[96px_minmax(0,1fr)_320px]" aria-hidden="true">
-    <span></span>
-    <span class="flex items-center gap-2.5 pl-[26px] text-sm text-muted-foreground"><span class="kind-chip bg-fjord text-fjord-ink">At work</span>Internal systems; numbers from my CV</span>
-    <span class="flex items-center gap-2.5 text-sm text-muted-foreground"><span class="kind-chip bg-rosas-1 text-primary-strong">Side projects</span>Public</span>
-  </div>
-
   <ol class="m-0 grid list-none gap-0 p-0">
     {
       rows.map((row, i) => (
         <li class="reveal row">
-          <div class="cell-year">
+          <div class={cn("cell-year", i === 0 && "year-below-chip")}>
             <span class="year">{span(row.role.start, row.role.end)}</span>
           </div>
 
           <div class="cell-main grid min-w-0 content-start gap-3">
             <div class="relative grid gap-0.5">
-              <span class={cn("node", row.role.end === null && "node-now")} aria-hidden="true"></span>
+              {i === 0 && <span class="kind-chip mb-1.5 w-fit bg-fjord text-fjord-ink">At work</span>}
+              <span class={cn("node", row.role.end === null && "node-now", i === 0 && "node-below-chip")} aria-hidden="true"></span>
               <h2 class="text-xl leading-tight font-bold tracking-[-0.02em]">{row.role.title}</h2>
               <span class="label-mono">
                 {companyName(row.role.company)} · {formatDate(row.role.start)} – {row.role.end ? formatDate(row.role.end) : "now"} · {row.role.location}
@@ -131,7 +126,7 @@ const marks = (line: string) =>
           {i === 0 ? (
             <aside class="cell-side grid content-start gap-3" aria-labelledby="side-h">
               <div class="grid gap-0.5 pb-1">
-                <span class="kind-chip w-fit bg-rosas-1 text-primary-strong lg:hidden">Side projects</span>
+                <span class="kind-chip mb-1.5 w-fit bg-rosas-1 text-primary-strong">Side projects</span>
                 <h2 id="side-h" class="text-xl leading-tight font-bold tracking-[-0.02em]">Coffee, counted.</h2>
                 <span class="label-mono">Open-data sites · {coffee.length} sites</span>
               </div>
@@ -275,6 +270,10 @@ const marks = (line: string) =>
     border: 3px solid var(--fjord-ink);
     background: var(--card);
   }
+  /* The current role carries the "At work" tag above its title; keep the dot level with the title */
+  .node-below-chip {
+    top: 36px;
+  }
   .node-now {
     border-color: var(--primary-strong);
     background: var(--primary);
@@ -314,6 +313,10 @@ const marks = (line: string) =>
     }
     .node {
       left: -31px;
+    }
+    /* Level with the title under the "At work" tag */
+    .year-below-chip {
+      padding-top: 66px;
     }
   }
 </style>
