@@ -19,7 +19,7 @@ const isCurrent = (href: string) => !href.includes("#") && path === href;
       <RoseMark size={28} />
       <span class="max-[520px]:sr-only">{site.name}</span>
     </a>
-    <nav class="flex min-w-0 gap-0.5" aria-label="Pages">
+    <nav class="ml-auto flex min-w-0 gap-0.5" aria-label="Pages">
       {
         nav.map((item) => (
           <a
@@ -37,7 +37,7 @@ const isCurrent = (href: string) => !href.includes("#") && path === href;
         ))
       }
     </nav>
-    <div class="ml-auto flex items-center gap-1.5">
+    <div class="flex items-center gap-1.5">
       <ThemeMenu client:load />
     </div>
   </div>
