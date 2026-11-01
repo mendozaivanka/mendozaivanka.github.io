@@ -42,6 +42,10 @@ export const nav = [
   { label: "Contact", href: "/#contact" },
 ];
 
+/** Where Timpla lives. Its own repo (served at /timpla/ on this domain) isn't up yet, so this points at the
+ *  last Render build. Change it to "/timpla/" when mendozaivanka/timpla deploys. */
+export const TIMPLA_URL = "https://portfolio-d79q.onrender.com/timpla/";
+
 export type CoffeeSite = {
   name: string;
   blurb: string;
@@ -55,7 +59,7 @@ export type CoffeeSite = {
 
 /** The coffee family: open-data side projects, each its own repo on GitHub Pages. */
 export const coffee: CoffeeSite[] = [
-  { name: "Timpla", blurb: "Metro Manila's independent cafés, and Philippine coffee by province", status: "Live", href: "/timpla/", preview: "Café map", tint: "rosas" },
+  { name: "Timpla", blurb: "Metro Manila's independent cafés, and Philippine coffee by province", status: "Live", href: TIMPLA_URL, preview: "Café map", tint: "rosas" },
   { name: "Sinturon", blurb: "Where the world's coffee species grow, and who produces it", status: "Building", href: "", preview: "Species map", tint: "sand" },
   { name: "Pigâ", blurb: "Espresso, pour-over and press, explained through their physics", status: "Planned", href: "", preview: "Pressure vs flow", tint: "fjord" },
   { name: "Sangkap", blurb: "What's in a cup: caffeine and chlorogenic acids, with sources", status: "Planned", href: "", preview: "Caffeine curve", tint: "heather" },

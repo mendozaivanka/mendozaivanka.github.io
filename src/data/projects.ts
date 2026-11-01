@@ -1,3 +1,4 @@
+import { TIMPLA_URL } from "./site";
 export type Category = "agents" | "automation" | "rag" | "prompting" | "evals" | "data";
 export type Tint = "rosas" | "heather" | "moss" | "sand";
 export type Kind = "work" | "personal";
@@ -395,7 +396,7 @@ export const projects: Project[] = [
       "  Benguet on menus 29% · harvest 12%",
       "  Sultan Kudarat menus 5% · harvest ==52%==",
     ],
-    links: [{ label: "Open Timpla", href: "/timpla/" }],
+    links: [{ label: "Open Timpla", href: TIMPLA_URL }],
     featured: true,
     media: {
       poster: "/projects/timpla/timpla-map-poster.jpg",
