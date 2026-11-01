@@ -77,7 +77,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
               io.unobserve(e.target);
             }
           }),
-        { threshold: 0.1 },
+        // Start just before a section enters the viewport, so a quick scroll never lands on empty space
+        { threshold: 0, rootMargin: "0px 0px 15% 0px" },
       );
       document.querySelectorAll<HTMLElement>(".reveal").forEach((el, i) => {
         el.style.transitionDelay = `${Math.min(i, 3) * 70}ms`;

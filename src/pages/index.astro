@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
 import Layout from "@/layouts/Layout.astro";
+import BeltPreview from "@/components/BeltPreview.astro";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import { buttonVariants } from "@/components/ui/button";
 import { formatDate } from "@/data/cv";
@@ -36,8 +37,6 @@ const coffeeTint = { rosas: "bg-rosas-1 text-primary-strong", sand: "bg-sand", f
 const statusTint = { Live: "bg-moss", Building: "bg-sand", Planned: "bg-secondary" };
 
 const tile = "flex min-w-0 flex-col gap-3 rounded-[20px] border border-border bg-card p-6";
-// Illustrative positions for the bean-belt preview; the live Sinturon map plots real GBIF records
-const dots = [[24, 46], [27, 52], [33, 60], [52, 50], [56, 56], [74, 44], [79, 47], [81, 55]];
 ---
 
 <Layout title={`${cv.profile.fullName.split(" ")[0]} Mendoza · ${site.role}`}>
@@ -111,8 +110,8 @@ const dots = [[24, 46], [27, 52], [33, 60], [52, 50], [56, 56], [74, 44], [79, 4
   </section>
 
   <!-- ───────── Coffee atlas: the data side ───────── -->
-  <section id="coffee" class="scroll-mt-20 pt-20 sm:pt-24" aria-labelledby="coffee-heading">
-    <div class="horizon mb-10 border-b border-border" aria-hidden="true"></div>
+  <section id="coffee" class="scroll-mt-20 pt-12 sm:pt-16" aria-labelledby="coffee-heading">
+    <div class="horizon mb-8 border-b border-border sm:mb-10" aria-hidden="true"></div>
     <div class="reveal grid items-end gap-6 pb-7 md:grid-cols-2 md:gap-8">
       <div class="grid gap-3.5">
         <p class="label-mono">Open-data side projects</p>
@@ -126,22 +125,21 @@ const dots = [[24, 46], [27, 52], [33, 60], [52, 50], [56, 56], [74, 44], [79, 4
       </p>
     </div>
 
-    <div class="reveal relative h-[340px] overflow-hidden rounded-xl border border-border bg-card sm:h-[380px]">
-      <div class="absolute inset-x-0 top-[34%] h-[32%] border-y border-dashed border-rosas-3 bg-rosas-1" aria-hidden="true"></div>
-      <span class="absolute top-[calc(34%-24px)] right-5 font-mono text-xs text-muted-foreground">23.4° N</span>
-      <span class="absolute top-[calc(66%+8px)] right-5 font-mono text-xs text-muted-foreground">23.4° S</span>
-      <div aria-hidden="true">
-        {dots.map(([x, y]) => <i class="absolute size-2.5 rounded-full bg-rosas-4" style={`left:${x}%;top:${y}%`}></i>)}
-      </div>
-      <div class="absolute inset-x-5 bottom-5 flex flex-wrap items-end justify-between gap-3">
-        <div class="grid max-w-80 gap-1 rounded-xl border border-border bg-card px-4 py-3.5">
-          <span class="label-mono">Sinturon preview</span>
+    <figure class="reveal m-0 overflow-hidden rounded-xl border border-border bg-card">
+      <a href="/sinturon/" class="block px-2 pt-4 sm:px-4" aria-label="Open Sinturon, the bean belt map">
+        <BeltPreview />
+      </a>
+      <figcaption class="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4">
+        <div class="grid gap-0.5">
+          <span class="label-mono">Sinturon · live</span>
           <span class="font-bold">The bean belt, between the tropics</span>
-          <span class="text-[13px] text-muted-foreground">Illustrative. The live map will plot open GBIF records.</span>
+          <span class="text-[13px] text-muted-foreground">12,514 open GBIF records of four coffee species; 93% fall between the tropics.</span>
         </div>
-        <span class={cn(buttonVariants({ size: "lg", variant: "outline" }), "pointer-events-none bg-card")}>Sinturon: coming soon</span>
-      </div>
-    </div>
+        <a href="/sinturon/" class={cn(buttonVariants({ size: "lg", variant: "outline" }), "bg-card")}>
+          Explore Sinturon <ArrowRightIcon className="size-4" />
+        </a>
+      </figcaption>
+    </figure>
 
     <ul class="grid list-none gap-3.5 p-0 pt-4 sm:grid-cols-2 lg:grid-cols-4">
       {
@@ -183,7 +181,7 @@ const dots = [[24, 46], [27, 52], [33, 60], [52, 50], [56, 56], [74, 44], [79, 4
   <!-- ───────── Contact ───────── -->
   <section
     id="contact"
-    class="reveal mt-18 flex scroll-mt-20 flex-wrap items-center justify-between gap-4 rounded-[20px] bg-primary p-7 text-primary-foreground"
+    class="reveal mt-12 flex scroll-mt-20 sm:mt-16 flex-wrap items-center justify-between gap-4 rounded-[20px] bg-primary p-7 text-primary-foreground"
     aria-labelledby="contact-heading"
   >
     <div>
