@@ -42,9 +42,8 @@ export const nav = [
   { label: "Contact", href: "/#contact" },
 ];
 
-/** Where Timpla lives. Its own repo (served at /timpla/ on this domain) isn't up yet, so this points at the
- *  last Render build. Change it to "/timpla/" when mendozaivanka/timpla deploys. */
-export const TIMPLA_URL = "https://portfolio-d79q.onrender.com/timpla/";
+/** Timpla lives in its own repo (mendozaivanka/timpla) and is served at /timpla/ on this domain. */
+export const TIMPLA_URL = "/timpla/";
 
 export type CoffeeSite = {
   name: string;

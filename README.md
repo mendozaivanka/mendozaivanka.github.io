@@ -1,7 +1,7 @@
 # mendozaivanka.github.io
 
 **Live:** https://mendozaivanka.github.io/ · **Status (2026-11-01):** migrated from Render to GitHub Pages; Timpla
-moves to its own repo next.
+lives in its own repo at `/timpla/`.
 
 The portfolio of Ivanka Mendoza, AI & automation engineer in Metro Manila: case studies from work (RAG, anomaly
 detection, fine-tuned local models), the CV, and links to the coffee family of open-data sites (Timpla, Sinturon,
@@ -38,8 +38,7 @@ npm run preview
   stays off the public site (`cv.profile.phone` is `null`).
 - **Design system:** change it in `../nordic-rose`, then `npm run design:sync` here and commit. CI runs
   `npm run design:verify` (hashes recorded at sync time) and fails if a vendored file was edited in this repo.
-- **A coffee site goes live:** set its `href` and `status` in `coffee` in `src/data/site.ts`. Timpla points at the
-  old Render build through `TIMPLA_URL` until its own repo deploys; then set it to `"/timpla/"`.
+- **A coffee site goes live:** set its `href` and `status` in `coffee` in `src/data/site.ts`.
 
 ## Deploying
 
