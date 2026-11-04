@@ -15,6 +15,7 @@ Deployed to GitHub Pages from `main` by `.github/workflows/deploy.yml`. README.m
   Colour classes: `primary`, `primary-strong`, `rosas-1..5`, `fjord`, `fjord-ink`, `moss`, `sand`, `heather`.
 - **Timpla and the other coffee sites** are separate repos served at `/<repo>/` on this domain. This repo only links to
   them (`coffee` in `src/data/site.ts`) and keeps `/tanim/*` redirect stubs.
-- **CV changed** → `npm run resume:pdf` and commit the regenerated PDF. The phone number stays off the public site.
+- **CV changed** → `npm run resume:pdf` and commit the regenerated `cv/*.pdf`. Never put the PDF in `public/` or link
+  it directly: CV buttons are `a[data-cv]` (encrypted, proof-of-work download; see README). The phone number stays off the public site.
 - **Commits and PRs carry no AI attribution** (no Co-Authored-By Claude, no "Generated with Claude Code").
 - Verify with `npm run build` (type-check + content validation + build). Commit/push only when asked.

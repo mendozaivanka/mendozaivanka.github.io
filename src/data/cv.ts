@@ -26,7 +26,7 @@ export type CV = {
     /** null hides it on the public site */
     phone: string | null;
     summary: string;
-    /** Path under public/, or null to hide the download button. */
+    /** File name of the PDF in cv/ (not public/: it ships encrypted, see scripts/cv-lock.mjs), or null to hide the CV buttons. */
     pdf: string | null;
   };
   impact: Impact[];
@@ -47,8 +47,8 @@ export const cv: CV = {
     phone: null as string | null,
     summary:
       "Senior AI and Prompt Engineer with expertise in designing, developing, and optimizing enterprise AI solutions, multi-agent workflows, and RAG architectures. Skilled in utilizing platforms such as Amazon SageMaker, Amazon Bedrock, OpenAI, and Anthropic to support the quality assurance of enterprise AI tools. Proficient in Python and LlamaIndex, with a strong track record of leading prompt optimization strategies, implementing responsible AI frameworks, and delivering actionable, data-driven insights to executive stakeholders. Proven ability to translate complex requirements into scalable, maintainable solutions that improve efficiency and reduce manual work.",
-    /** Path under public/, or null to hide the download button. */
-    pdf: "/Ivanka-Mendoza-CV.pdf" as string | null,
+    /** File name of the PDF in cv/ (not public/: it ships encrypted, see scripts/cv-lock.mjs), or null to hide the CV buttons. */
+    pdf: "Ivanka-Mendoza-CV.pdf" as string | null,
   },
 
   impact: [

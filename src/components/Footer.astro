@@ -5,11 +5,12 @@ import { getCv } from "@/lib/data";
 const { pdf } = (await getCv()).profile;
 
 const year = new Date().getFullYear();
-const links = [
+// The CV link downloads the encrypted PDF via src/lib/cv-download.ts; without JavaScript it opens the CV on /about/
+const links: { label: string; href: string; cv?: string }[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about/" },
   { label: "Tools", href: "/tools/" },
-  ...(pdf ? [{ label: "CV", href: pdf }] : []),
+  ...(pdf ? [{ label: "CV", href: "/about/#cv", cv: pdf }] : []),
   { label: "Nordic Rose", href: "/nordic-rose/" },
   { label: "Contact", href: "/#contact" },
 ];
@@ -22,7 +23,7 @@ const links = [
     <nav class="flex flex-wrap gap-x-4 gap-y-1" aria-label="Footer">
       {
         links.map((l) => (
-          <a href={l.href} class="py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <a href={l.href} data-cv={l.cv} class="py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
             {l.label}
           </a>
         ))

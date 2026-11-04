@@ -2,7 +2,8 @@
 //
 // Run after changing the CV:   npm run resume:pdf
 // It builds the site, serves dist/ locally, prints /resume/ with headless Chromium and writes the PDF to the path in
-// cv.profile.pdf (under public/, so it ships with the next deploy). Commit the PDF: the host's build doesn't run this.
+// cv.profile.pdf under cv/ (not public/: the site ships it encrypted, see scripts/cv-lock.mjs). Commit the PDF: the
+// host's build doesn't run this.
 // First time only: `npx playwright install chromium` (free, downloads a local browser).
 import { createReadStream, existsSync, statSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
@@ -10,12 +11,13 @@ import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright-core";
+import { writeLockedCv } from "./cv-lock.mjs";
 import { cv } from "../src/data/cv.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
-if (!cv.profile.pdf) throw new Error("cv.profile.pdf is null: set a path like /Ivanka-Mendoza-Resume.pdf first");
-const OUT = path.join(ROOT, "public", cv.profile.pdf);
+if (!cv.profile.pdf) throw new Error("cv.profile.pdf is null: set a file name like Ivanka-Mendoza-CV.pdf first");
+const OUT = path.join(ROOT, "cv", cv.profile.pdf);
 
 if (!process.argv.includes("--no-build")) execSync("npm run build", { cwd: ROOT, stdio: "inherit" });
 
@@ -43,8 +45,9 @@ try {
   await page.evaluate(() => document.fonts.ready);
   const pdf = await page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true });
   writeFileSync(OUT, pdf);
-  // Also drop it into this build's output, so `npm run preview` serves the new file straight away
-  writeFileSync(path.join(DIST, cv.profile.pdf), pdf);
+  // Re-lock it for the next build and for this build's output, so `npm run preview` serves the new CV straight away
+  writeLockedCv(ROOT, cv.profile.pdf, path.join(ROOT, "public"));
+  writeLockedCv(ROOT, cv.profile.pdf, DIST);
   console.log(`resume: wrote ${path.relative(ROOT, OUT)} (${Math.round(pdf.length / 1024)} KB)`);
 } finally {
   await browser.close();

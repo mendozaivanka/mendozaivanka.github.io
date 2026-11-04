@@ -41,7 +41,7 @@ const contact = [
   <body class="bg-background text-[10pt] leading-[1.45] text-foreground print:bg-white">
     <main class="sheet px-4">
       <p class="screen-only mb-6 text-sm text-muted-foreground">
-        Printable résumé. <a class="text-primary-strong underline" href={p.pdf ?? "/about/"}>Download the PDF</a> ·
+        Printable résumé. <a class="text-primary-strong underline" href="/about/#cv" data-cv={p.pdf}>Download the PDF</a> ·
         <a class="text-primary-strong underline" href="/about/">Back to About</a>
       </p>
 
@@ -138,5 +138,8 @@ const contact = [
         </section>
       </div>
     </main>
+    <script>
+      import "@/lib/cv-download";
+    </script>
   </body>
 </html>

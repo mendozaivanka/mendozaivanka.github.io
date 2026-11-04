@@ -4,6 +4,8 @@ import { loadEnv } from "vite";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import { cvLock } from "./scripts/cv-lock.mjs";
+import { cv } from "./src/data/cv.ts";
 
 // Deployment settings come from the environment (.env locally, the host's dashboard in production),
 // so moving host or domain is a settings change, not a code change. Every option is in .env.example.
@@ -55,7 +57,9 @@ export default defineConfig({
     "/tanim/tour/": "/timpla/tour/",
     "/tanim/data/": "/timpla/data/#beans",
   },
-  integrations: [react(), sitemap()],
+  // cvLock encrypts cv/<file>.pdf into public/dl/ so bots never get a plain PDF (see scripts/cv-lock.mjs).
+  // /resume/ is the print source for that PDF: noindex, so it stays out of the sitemap too.
+  integrations: [react(), sitemap({ filter: (page) => !page.includes("/resume/") }), cvLock({ pdfName: cv.profile.pdf })],
   // Typed, validated settings for the code (import from "astro:env/server"). A wrong value fails the build.
   env: {
     schema: {

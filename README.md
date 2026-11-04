@@ -34,8 +34,13 @@ npm run preview
 ## Common changes
 
 - **Content:** edit `src/data/*.ts`. A new field needs the TypeScript type and the zod schema updated together.
-- **CV:** edit `src/data/cv.ts`, then `npm run resume:pdf` and commit `public/Ivanka-Mendoza-CV.pdf`. The phone number
+- **CV:** edit `src/data/cv.ts`, then `npm run resume:pdf` and commit `cv/Ivanka-Mendoza-CV.pdf`. The phone number
   stays off the public site (`cv.profile.phone` is `null`).
+- **CV bot protection:** the PDF is never served as a plain file. Each build encrypts `cv/*.pdf` into `/dl/*.bin`
+  (`scripts/cv-lock.mjs`); a CV button (`a[data-cv]`) does about a second of proof-of-work in the browser on a real
+  click, then decrypts and saves it (`src/lib/cv-download.ts`). Scrapers and automated browsers get nothing usable;
+  without JavaScript the button opens the CV on `/about/`. It is a speed bump, not access control: the CV text is on
+  `/about/` and in this public repo.
 - **Design system:** change it in `../nordic-rose`, then `npm run design:sync` here and commit. CI runs
   `npm run design:verify` (hashes recorded at sync time) and fails if a vendored file was edited in this repo.
 - **A coffee site goes live:** set its `href` and `status` in `coffee` in `src/data/site.ts`.

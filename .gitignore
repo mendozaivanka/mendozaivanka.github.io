@@ -18,3 +18,6 @@ src/styles/tokens.css
 
 # npm run data:export output
 data-export/
+
+# the encrypted CV, rebuilt from cv/*.pdf on every dev/build (scripts/cv-lock.mjs)
+public/dl/

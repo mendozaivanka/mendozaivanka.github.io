@@ -37,7 +37,7 @@ const metrics = projects.flatMap((p) => p.caseStudy?.evals.metrics.map((m) => ({
           <dd><a href={`mailto:${profile.email}`} class="text-primary-strong underline decoration-primary-strong/30 underline-offset-4 hover:decoration-current">{profile.email}</a></dd>
         </div>
       </dl>
-      {profile.pdf && <a href={profile.pdf} download class={cn(buttonVariants({ size: "lg" }), "print:hidden")}>CV</a>}
+      {profile.pdf && <a href="#cv" data-cv={profile.pdf} class={cn(buttonVariants({ size: "lg" }), "print:hidden")}>CV</a>}
     </div>
   </section>
 

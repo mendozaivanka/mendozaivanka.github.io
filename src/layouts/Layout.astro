@@ -63,6 +63,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
     <Toaster client:load />
 
     <script>
+      // CV buttons (a[data-cv]): proof-of-work download of the encrypted PDF
+      import "@/lib/cv-download";
+    </script>
+
+    <script>
       // Fade sections in as they scroll into view. Nothing is hidden unless this script
       // actually runs and the browser can observe; otherwise sections stay visible.
       if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) {

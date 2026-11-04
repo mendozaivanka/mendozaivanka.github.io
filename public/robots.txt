@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /dl/
+Disallow: /resume/
 
 Sitemap: https://mendozaivanka.github.io/sitemap-index.xml
